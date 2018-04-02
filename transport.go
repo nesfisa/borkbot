@@ -3,10 +3,51 @@ package borkbot
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"net/http"
 
+	"github.com/gorilla/mux"
+
+	kitlog "github.com/go-kit/kit/log"
+	kithttp "github.com/go-kit/kit/transport/http"
 	"github.com/go-playground/form"
 )
+
+func MakeHandler(s Service, logger kitlog.Logger) http.Handler {
+	opts := []kithttp.ServerOption{
+		kithttp.ServerErrorLogger(logger),
+		kithttp.ServerErrorEncoder(encodeError),
+	}
+
+	fetchBorkHandler := kithttp.NewServer(
+		makeFetchBorkEndpoint(s),
+		decodeFetchBorkRequest,
+		encodeResponse,
+		opts...,
+	)
+
+	r := mux.NewRouter()
+	r.Handle("/borkbot/v1/bork", fetchBorkHandler).Methods("POST")
+	return r
+}
+
+var errBadRoute = errors.New("bad route")
+
+type errorer interface {
+	error() error
+}
+
+// encode errors from business-logic
+func encodeError(_ context.Context, err error, w http.ResponseWriter) {
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	switch err {
+	default:
+		w.WriteHeader(http.StatusInternalServerError)
+	}
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"error": err.Error(),
+	})
+}
 
 func decodeFetchBorkRequest(_ context.Context, r *http.Request) (interface{}, error) {
 	var br fetchBorkRequest
@@ -25,22 +66,6 @@ func encodeResponse(ctx context.Context, w http.ResponseWriter, response interfa
 	}
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	return json.NewEncoder(w).Encode(response)
-}
-
-type errorer interface {
-	error() error
-}
-
-// encode errors from business-logic
-func encodeError(_ context.Context, err error, w http.ResponseWriter) {
-	w.Header().Set("Context-Type", "application/json; charset=utf-8")
-	switch err {
-	default:
-		w.WriteHeader(http.StatusInternalServerError)
-	}
-	json.NewEncoder(w).Encode(map[string]interface{}{
-		"error": err.Error(),
-	})
 }
 
 // SlackForm contains all of the information that comes in from a slack post request

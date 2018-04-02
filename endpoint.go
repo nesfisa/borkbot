@@ -7,16 +7,6 @@ import (
 )
 
 // Endpoints models a collection of all bork endpoints
-type Endpoints struct {
-	FetchBorkEndpoint endpoint.Endpoint
-}
-
-// MakeEndpoints is a constructor that returns a new Endpoints struct for server construction
-func MakeEndpoints(svc Service) Endpoints {
-	var ep Endpoints
-	ep.FetchBorkEndpoint = makeFetchBorkEndpoint(svc)
-	return ep
-}
 
 type fetchBorkRequest struct {
 	UserID      string `form:"user_id"`
