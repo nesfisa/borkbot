@@ -1,0 +1,12 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: borkbot-ingres
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /borkbot/v1/*
+        backend:
+          serviceName: borkd-dev
+          servicePort: 8080

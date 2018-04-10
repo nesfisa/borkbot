@@ -14,7 +14,7 @@ import (
 
 func main() {
 	var (
-		httpAddr          = flag.String("listen", ":9000", "HTTP listen and serve address for service")
+		httpAddr          = flag.String("listen", ":8080", "HTTP listen and serve address for service")
 		verificationToken = flag.String("verification_token", "", "Slack token used to verify requests come from slack")
 	)
 	flag.Parse()

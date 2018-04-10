@@ -6,11 +6,11 @@ import (
 	"errors"
 	"net/http"
 
+	"github.com/go-playground/form"
 	"github.com/gorilla/mux"
 
 	kitlog "github.com/go-kit/kit/log"
 	kithttp "github.com/go-kit/kit/transport/http"
-	"github.com/go-playground/form"
 )
 
 func MakeHandler(s Service, logger kitlog.Logger) http.Handler {
