@@ -17,11 +17,10 @@ ADD . borkbot
 # build the source
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o borkbotd borkbot/cmd/borkd/main.go
 # use a minimal alpine image
-FROM scratch
+FROM alpine:3.7
 # set working directory
-WORKDIR /
+WORKDIR /usr/local/bin
 # copy the binary from builder
 COPY --from=builder /go/src/github.com/sparklycb/borkbotd .
-EXPOSE 8080
 # run the binary
-CMD ["/borkbotd"]
+CMD ["/usr/local/binborkbotd"]
