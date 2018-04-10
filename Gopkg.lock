@@ -47,12 +47,6 @@
   packages = ["."]
   revision = "b84e30acd515aadc4b783ad4ff83aff3299bdfe0"
 
-[[projects]]
-  branch = "master"
-  name = "github.com/sparklycb/borkbot"
-  packages = ["."]
-  revision = "c9797a5c0ebc5b9a41759fcc425609cf36b4ff5e"
-
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1

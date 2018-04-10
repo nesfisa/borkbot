@@ -19,13 +19,11 @@ docker
 ```bash
 git clone git@github.com:sparklycb/borkbot.git
 
-docker build -t borkbot .
+docker build -t borkbot -f ./development/Dockerfile .
 
-docker run --rm -it -p 9000:9000 -v $(pwd):/go/src/github.com/sparklycb/borkbot borkbot sh
-
-/go/src/github.com/sparklycb: CompileDaemon -build="go build -o borkbotd borkbot/cmd/borkd/main.go" \
-                                            -command="./borkbotd --verification_token=<SLACK_VERIRICATION_TOKEN>" \
-                                            -exclude-dir="vendor"
+docker run --rm -it -p 8080:8080 -v $(pwd):/go/src/github.com/sparklycb/borkbot borkbot CompileDaemon -build="go build -o borkbotd borkbot/cmd/borkd/main.go" \
+                                                                                        -command="./borkbotd --verification_token=<SLACK_VERIRICATION_TOKEN>" \
+                                                                                        -exclude-dir="vendor"
 ```
 
 After running the above you should see:

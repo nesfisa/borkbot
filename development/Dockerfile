@@ -17,6 +17,6 @@ RUN dep ensure -vendor-only
 
 ADD . borkbot
 
-EXPOSE 9000
+EXPOSE 8080
 
 CMD ["go", "run", "src/cmd/borkd/main.go"]
