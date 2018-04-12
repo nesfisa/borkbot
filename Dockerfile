@@ -22,6 +22,6 @@ FROM scratch
 WORKDIR /
 # copy the binary from builder
 COPY --from=builder /go/src/github.com/sparklycb/borkbotd .
-EXPOSE 8080
+EXPOSE 443
 # run the binary
 CMD ["/borkbotd"]

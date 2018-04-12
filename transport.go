@@ -48,13 +48,13 @@ type errorer interface {
 // encode errors from business-logic
 func encodeError(_ context.Context, err error, w http.ResponseWriter) {
 	// based on the type of error we can set different status codes in this block
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	switch e := err.Error(); e {
 	case "why you try to be a slack?":
 		w.WriteHeader(http.StatusUnauthorized)
 	default:
 		w.WriteHeader(http.StatusInternalServerError)
 	}
-	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	json.NewEncoder(w).Encode(map[string]interface{}{
 		"error": err.Error(),
 	})

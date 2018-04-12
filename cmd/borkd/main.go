@@ -33,7 +33,7 @@ func main() {
 	bs = borkbot.NewLoggingService(log.With(logger, "component", "borkbot"), bs)
 	mux := http.NewServeMux()
 	mux.Handle("/borkbot/v1/", borkbot.MakeHandler(bs, httpLogger))
-	mux.Handle("/", accessControl(mux))
+	mux.Handle("/borkbot/", accessControl(mux))
 
 	// Configure TLS
 	cfg := &tls.Config{
@@ -59,10 +59,12 @@ func main() {
 	// Configure Listen and Serve
 	errs := make(chan error, 2)
 	errChan := make(chan error)
+	// Server goroutine
 	go func() {
 		logger.Log("transport", "https", "address", *httpAddr, "msg", "listening")
-		errs <- srv.ListenAndServeTLS("cert.pem", "key.pem")
+		errs <- srv.ListenAndServeTLS("/secure/cert.pem", "/secure/key.pem")
 	}()
+	// operator cancel go routines
 	go func() {
 		c := make(chan os.Signal)
 		signal.Notify(c, syscall.SIGINT)

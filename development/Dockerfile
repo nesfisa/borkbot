@@ -12,8 +12,8 @@ WORKDIR /go/src/github.com/sparklycb
 
 ADD Gopkg.lock Gopkg.lock
 ADD Gopkg.toml Gopkg.toml
-ADD certs/cert.pem cert.pem
-ADD certs/key.pem key.pem
+ADD secure/cert.pem /secure/cert.pem
+ADD secure/key.pem /secure/key.pem
 
 RUN dep ensure -vendor-only
 

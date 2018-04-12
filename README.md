@@ -26,9 +26,9 @@ mkdir certs
 # https://golang.org/pkg/net/http/#ListenAndServeTLS
 # https://gist.github.com/denji/12b3a568f092ab951456
 
-docker build -t borkbot -f ./development/Dockerfile .
+docker build -t borkbot:dev -f ./development/Dockerfile .
 
-docker run --rm -it -p 8080:8080 -v $(pwd):/go/src/github.com/sparklycb/borkbot borkbot CompileDaemon -build="go build -o borkbotd borkbot/cmd/borkd/main.go" \
+docker run --rm -it -p 8080:8080 -v $(pwd):/go/src/github.com/sparklycb/borkbot borkbot:dev CompileDaemon -build="go build -o borkbotd borkbot/cmd/borkd/main.go" \
                                                                                         -command="./borkbotd --verification_token=<SLACK_VERIRICATION_TOKEN>" \
                                                                                         -exclude-dir="vendor"
 ```
@@ -41,6 +41,7 @@ After running the above you should see:
 2018/04/03 18:09:38 Restarting the given command.
 2018/04/03 18:09:38 stdout: ts=2018-04-03T18:09:38.8166853Z transport=https address=:9000 msg=listening
 ```
+
 The health check endpoint is GET at /borkbot/v1/health which returns a 200 json response with a string.
 You can test this first in postmant to make sure the bot is running.
 
@@ -65,8 +66,8 @@ If no verification_token is passed then a POST request to /borkbot/v1/bork will 
 To build the production image run:
 
 ```bash
-docker build -t borkbot:production -f .
-docker run -d -p 8080:8080 borkbot:production borkbotd --verification_token=<SLACK_VERIRICATION_TOKEN>
+docker build -t borkbot:production .
+docker run --rm -it -p 443:443 -v $(pwd)/secure:/secure borkbot:production /borkbotd --listen=:443
 ```
 
 The production binary can be configured with a listen flag for operator needs. Make sure your -p flag matches the listen flag specified. 8080 is the current default: cmd/borkd/main.go:17
